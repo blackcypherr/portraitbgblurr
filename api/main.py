@@ -1,9 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from werkzeug.utils import secure_filename
-import cv2
-import numpy as np
+from PIL import Image, ImageFilter
 import os
-from datetime import datetime
 
 app = Flask(__name__)
 
@@ -11,12 +9,8 @@ UPLOAD_FOLDER = 'static'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def blur_background(image_path, blur_strength=15):
-    image = cv2.imread(image_path)
-    if image is None:
-        raise ValueError("Could not read image.")
-
-    blur_strength = max(1, int(blur_strength // 2) * 2 + 1)
-    blurred_image = cv2.GaussianBlur(image, (blur_strength, blur_strength), 0)
+    image = Image.open(image_path)
+    blurred_image = image.filter(ImageFilter.GaussianBlur(blur_strength))
     return blurred_image
 
 @app.route('/', methods=['GET', 'POST'])
@@ -39,7 +33,7 @@ def index():
             blurred_image = blur_background(file_path, blur_strength)
 
             blurred_image_path = os.path.join(app.config['UPLOAD_FOLDER'], f"blurred_{filename}")
-            cv2.imwrite(blurred_image_path, blurred_image)
+            blurred_image.save(blurred_image_path)
 
             return render_template('index.html', original_image=file_path, blurred_image=blurred_image_path, blur_strength=blur_strength)
 
