@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blur Background</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            margin: 20px auto;
+            width: 80%;
+            max-width: 600px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        img {
+            max-width: 100%;
+            margin-top: 20px;
+        }
+        label {
+            margin-top: 10px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Upload and Blur Background</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <label for="image">Choose Image</label>
+            <input type="file" name="image" required>
+
+            <label for="blur_strength">Blur Level (0-100)</label>
+            <input type="range" name="blur_strength" min="0" max="100" value="{{ blur_strength }}" required>
+
+            <button type="submit">Blur Background</button>
+        </form>
+
+        {% if original_image %}
+        <h2>Original Image</h2>
+        <img src="{{ original_image }}" alt="Original Image">
+
+        <h2>Blurred Image</h2>
+        <img src="{{ blurred_image }}" alt="Blurred Image">
+        {% endif %}
+    </div>
+</body>
+</html>
